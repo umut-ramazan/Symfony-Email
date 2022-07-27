@@ -1,14 +1,35 @@
-version: '3'
-
+version: '3.8'
 services:
-###> doctrine/doctrine-bundle ###
   database:
+    container_name: pg_container
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: test_db
+    volumes:
+      - my-db:/var/lib/sql
     ports:
-      - "5432"
-###< doctrine/doctrine-bundle ###
+      - "5432:5432"
 
-###> symfony/mailer ###
+  pgadmin:
+    container_name: pgadmin4_container
+    image: dpage/pgadmin4
+    restart: always
+    volumes:
+      - my-db:/var/lib/sql
+    environment:
+      PGADMIN_DEFAULT_EMAIL: umut@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: 123
+    ports:
+      - "5050:80"
   mailer:
     image: schickling/mailcatcher
     ports: [1025, 1080]
+volumes:
+  my-db:
+
+  ###> symfony/mailer ###
+
 ###< symfony/mailer ###
